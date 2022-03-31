@@ -1,5 +1,7 @@
 package blackJack;
 
+//this class just takes the BlackJackGUI
+
 public class RunGame {
 
 	public static void main(String[] args) {

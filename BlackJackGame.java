@@ -7,21 +7,21 @@ import java.util.Random;
 public class BlackJackGame {
 	
 ///////////////////////////////////////////////////////////////	
-	private int pickedCard;
+	private int indexOfCard;
 	
-	private int player_card1;
-	private int player_card2;
+	private int playerCard1;
+	private int playerCard2;
 	
-	private int dealer_card1;
-	private int dealer_card2;
+	private int dealerCard1;
+	private int dealerCard2;
 	
-	private int player_Total;
-	private int dealer_Total;
+	private int playerTotal;
+	private int dealerTotal;
 	
 	private List<Integer> deckOfCards;
 	private List<Integer> playingCards;
 	
-	private Random random_Card;
+	private Random randomCard;
 	
 ////////////////////////////////////////////////////////////////////////////////	
 	
@@ -32,105 +32,158 @@ public class BlackJackGame {
 			            1,2,3,4,5,6,7,8,9,10,10,10,10,
 			            1,2,3,4,5,6,7,8,9,10,10,10,10));
 		
-		pickedCard = 0;
+		indexOfCard = 0;
 		
-		player_card1 = 0;
-		player_card2 = 0;
+		playerCard1 = 0;
+		playerCard2 = 0;
 		
-		dealer_card1 = 0;
-		dealer_card2 = 0;
+		dealerCard1 = 0;
+		dealerCard2 = 0;
 		
-		player_Total = 0;
-		dealer_Total = 0;
+		playerTotal = 0;
+		dealerTotal = 0;
 		
 		playingCards = new ArrayList<Integer>(deckOfCards);
 		
-		random_Card = new Random();	
+		randomCard = new Random();	
 	}
 ////////////////////////////////////////////////////////////////////////////////	
 	public void FirstRound() {
-		pickedCard = random_Card.nextInt(0, playingCards.size() + 1);
-		player_card1 = deckOfCards.get(pickedCard);
-		deckOfCards.remove(pickedCard);
 		
-		pickedCard = random_Card.nextInt(0, playingCards.size() + 1);
-		player_card2 = deckOfCards.get(pickedCard);
-		deckOfCards.remove(pickedCard);
+		playerTotal = 0;
+		dealerTotal = 0;
+		
+		playingCards = new ArrayList<Integer>(deckOfCards);
+		
+		indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+		playerCard1 = playingCards.get(indexOfCard);
+		playingCards.remove(indexOfCard);
+		
+		indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+		playerCard2 = playingCards.get(indexOfCard);
+		playingCards.remove(indexOfCard);
 		
 		
-		pickedCard = random_Card.nextInt(0, playingCards.size() + 1);
-		dealer_card1 = deckOfCards.get(pickedCard);
-		deckOfCards.remove(pickedCard);
+		indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+		dealerCard1 = playingCards.get(indexOfCard);
+		playingCards.remove(indexOfCard);
 		
-		pickedCard = random_Card.nextInt(0, playingCards.size() + 1);
-		dealer_card2 = deckOfCards.get(pickedCard);
-		deckOfCards.remove(pickedCard);
+		indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+		dealerCard2 = playingCards.get(indexOfCard);
+		playingCards.remove(indexOfCard);
 		
-		player_Total = player_card1 + player_card2;
-		dealer_Total = dealer_card1 + dealer_card2;
+		playerTotal = playerCard1 + playerCard2;
+		dealerTotal = dealerCard1 + dealerCard2;
 		
-		System.out.println("Dealers first card: " + dealer_card1);
+		System.out.println("\n\nDealers first card: " + dealerCard1);
 		
-		System.out.println("Your cards: " + player_card1 + " and " + player_card2);
-		System.out.println("The card total is: " + player_Total);
+		System.out.println("Your cards: " + playerCard1 + " and " + playerCard2);
+		System.out.println("The card total is: " + playerTotal);
 	}
 	
 	
 /////////////////////////////////////////////////////////////////////////////////////
 	
-	public String getPlayerCards() {
-		return player_card1 + " and " + player_card2;
-	}
-	
-	public String getDealerCards() {
-		return dealer_card1 + " and " + player_card2;
+	public int getPlayerTotal() {
+		return playerTotal;
 	}
 //////////////////////////////////////////////////////////////////////////////////////
-	
+
 	public void hit() {
+		indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+		playerCard1 = playingCards.get(indexOfCard);
+		playingCards.remove(indexOfCard);
 		
-		boolean bust;
+		playerTotal += playerCard1;
 		
-		bust = false;
-		
-		if(player_Total > 21) {
-			bust = true;
-			
-			System.out.print("You bust. you lost");
-			System.out.println("Click new game to play again");
+		System.out.println("\nYour new card is: " + playerCard1);
+		System.out.println("The card total is: " + playerTotal);
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////
+	public String getPlayerCard() {
+		return playerCard1 + " and  " + playerCard2;
+	}
+	
+	public int getDealerCard() {
+		return dealerCard1;
+	}
+	
+	
+	public int getNewCard() {
+		return playerCard1;
+	}
+	
+///////////////////////////////////////////////////////////////////////////////////////
+	
+	public boolean isBust() {
+		if(playerTotal > 21) {
+			return true;
 		}
-		
-		pickedCard = random_Card.nextInt(0, playingCards.size() + 1);
-		player_card1 = deckOfCards.get(pickedCard);
-		deckOfCards.remove(pickedCard);
-		
-		player_Total += player_card1;
-		
-		System.out.println("Your new card is: " + pickedCard);
-		System.out.println("The card total is: " + player_Total);
+		else {
+			return false;
+		}
+	}
+	
+	public boolean dealerWins() {
+		if(dealerTotal > playerTotal && dealerTotal < 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean playerWins() {
+		if(dealerTotal < playerTotal && playerTotal < 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean blackJackWin() {
+		if(playerTotal == 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
 	
 ///////////////////////////////////////////////////////////////////////////////////
 	public void stand() {
-		System.out.println("Your total is: " + player_Total);
-		System.out.println("Dealer total is: " + dealer_Total);
+		System.out.println("Your total is: " + playerTotal);
 		
-		if (player_Total > 21) {
+		while (dealerTotal < 17) {
+			indexOfCard = randomCard.nextInt(0, playingCards.size() + 1);
+			dealerCard1 = playingCards.get(indexOfCard);
+			playingCards.remove(indexOfCard);
+			
+			System.out.println("dealer got: " + dealerCard1);
+			
+			dealerTotal += dealerCard1;
+			
+			System.out.println("Dealers total: " + dealerTotal);
+		}
+		
+		if (playerTotal > 21) {
 			System.out.println("You bust, you went over 21");
 			System.out.println("Click new game to play again");
 		}
 		
-		if(dealer_Total < player_Total && player_Total < 21) {
+		if(dealerTotal < playerTotal && playerTotal < 21) {
 			System.out.println("You win by having the biggest hand!");
 			System.out.println("Click new game to play again");
 		}
 		
-		if(dealer_Total > player_Total && dealer_Total < 21) {
+		if(dealerTotal > playerTotal && dealerTotal < 21) {
 			System.out.println("Dealer had a bigger hand. you lost");
 			System.out.println("Click new game to play again");
 		}
 		
-		if(player_Total == 21) {
+		if(playerTotal == 21) {
 			System.out.println("BlackJack!!! you win!");
 			System.out.println("Click new game to play again");
 		}
