@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 public class BlackJackGUI extends JFrame implements ActionListener{
+	//we create our variables for our GUI
 	JButton newGameButton;
 	JButton	hitButton;
 	JButton standButton;
@@ -19,8 +20,10 @@ public class BlackJackGUI extends JFrame implements ActionListener{
 	private JLabel label;
 	private JLabel label1;
 	
+	//we call the class BlackJackGame
 	BlackJackGame game;
 	
+	//we make our boolean variables to check win/loss logics
 	boolean startOfGame;
 	boolean bust;
 	boolean dealerWins;
@@ -28,41 +31,48 @@ public class BlackJackGUI extends JFrame implements ActionListener{
 	boolean playerWins;
 	
 	BlackJackGUI (String title){
-		super(title);
-		setSize(500,500);
-		setLayout(new BorderLayout());	
+		super(title); //we set our title which is getting called from the RunGame class
+		setSize(500,500); //we set our size
+		setLayout(new BorderLayout()); //we use a Borderlayout as it looks more fitting
 		
+		//we initiate our BlackJackGame class
 		game = new BlackJackGame();
 		
+		//we create our new game button
 		newGameButton = new JButton("New Game");
 		newGameButton.setToolTipText("Click me to play again");
 		newGameButton.addActionListener(this);
 		
+		//we make our hit button
 		hitButton = new JButton("Hit");
 		hitButton.setToolTipText("Click me to get another card");
 		hitButton.addActionListener(this);
 		
+		//we make our stand button
 		standButton = new JButton("Stand");
 		standButton.setToolTipText("Click me to stand and see if you are close to 21");
 		standButton.addActionListener(this);
 		
-		label = new JLabel("Player gets: " + game.getPlayerCard() + "     Dealer gets: " + game.getDealerCard());
-		//label1 = new JLabel("Yolo");
+		//the label will display the information on the centre of the GUI
+		label = new JLabel("                      Player gets: " + game.getPlayerCard() + "         Dealer gets: " + game.getDealerCard());
 		
+		//we give our GUI a blackjack table colour. or close to that colour
 		panel = new JPanel(new BorderLayout());
         panel.setBackground(Color.getHSBColor((float)0.347, (float)1, (float)0.5));
         
+        //we position where the buttons will be at
         panel.add(newGameButton, BorderLayout.NORTH);
         panel.add(hitButton, BorderLayout.WEST);
         panel.add(standButton, BorderLayout.EAST);       
         panel.add(label, BorderLayout.CENTER);
         
-        //label1.setVerticalAlignment(50);
-        
+        //we add the panel to the GUI
         add(panel);
-               
+          
+        //and set its visibility to true
         setVisible(true);
         
+        //before the game even begins, we set all of our conditions to false
         bust = false;
         startOfGame = false;
         dealerWins = false;
@@ -71,66 +81,91 @@ public class BlackJackGUI extends JFrame implements ActionListener{
 	}
 		
 	@Override		
-	public void actionPerformed(ActionEvent event) 
+	public void actionPerformed(ActionEvent buttonClicked) 
 	{	
-		if (event.getSource() == newGameButton) {
+		if (buttonClicked.getSource() == newGameButton) {
 			
+			//when the new game button is clicked. we call the method firsRound from BlackJackGame
 			game.FirstRound();
-			startOfGame = false;
+			
+			//we set all of our game conditions to false again except for startofgame. for error checking
+			startOfGame = true;
 			bust = false;
 			dealerWins = false;
 	        playerWins = false;
 	        blackJackWin = false;
 	        
-	        label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+	        label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
 		}
 		
-		if (startOfGame == true) {
+		//you cant click any other button other then newgame to begin playing
+		if (startOfGame == false) {
 			JOptionPane.showMessageDialog(this, "Click new game First!");
 		}
 		else {
-			if (event.getSource() == hitButton) {
+			if (buttonClicked.getSource() == hitButton) {
 					
+				//if hit was clicked and startofgame is true
+				//we call the method hit from the BlackJackGame
 				game.hit();
+				
+				//and we give a popup text showing what card value they got
 				JOptionPane.showMessageDialog(this,"You got: " + game.getNewCard());
 				
+				//we call the isbust boolean logic over to check if the player went over 21
 				bust = game.isBust();
-				label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
 				
+				//we display the card they got on the GUI
+				label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+				
+				//if the player went over 21, we display the messeages and set the startofgame to false 
+				//as its the end of the round
 				if(bust == true) {
 					JOptionPane.showMessageDialog(this, "You bust! click new game to play again!");
 					System.out.println("Bust!");
-					label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
-					startOfGame = true;
+					label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					startOfGame = false;
 				}
 			}
-			if (event.getSource() == standButton) {	
+			if (buttonClicked.getSource() == standButton) {	
 				
+				//if stand is clicked and startofgame is true
+				//we call the stand method from BlackJackGame
 				game.stand();
+				
+				//and we call the win logic conditions over from BlackJackGame
 				dealerWins = game.dealerWins();
 				playerWins = game.playerWins();
 				blackJackWin = game.blackJackWin();
 				
-				label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+				label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
 				
 				startOfGame = true;
 				
 				if(dealerWins == true) {
 					JOptionPane.showMessageDialog(this, "dealer wins by biggest hand! click new game to play again!");
 					System.out.println("dealer won!");
-					label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					startOfGame = false;
+				}
+				
+				if(dealerWins == false) {
+					JOptionPane.showMessageDialog(this, "Dealer bust! click new game to play again!");
+					System.out.println("Dealer went bust");
 				}
 					
 				if(playerWins == true) {
 					JOptionPane.showMessageDialog(this, "You won by biggest hand! click new game to play again!");
 					System.out.println("Player won!");
-					label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					startOfGame = false;
 				}
 					
 				if(blackJackWin == true) {
 					JOptionPane.showMessageDialog(this, "WOOOOOOO 21 BLACKJACK!!!! click new game to play again!");
 					System.out.println("Player won by blackJack!");
-					label.setText("			Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					label.setText("                      Player gets: " + game.getPlayerCard() + "           Dealer gets: " + game.getDealerCard());
+					startOfGame = false;
 				}
 			}
 		}
