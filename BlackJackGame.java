@@ -123,6 +123,10 @@ public class BlackJackGame {
 		return playerTotal;
 	}
 	
+	public int getDealerTotal() {
+		return dealerTotal;
+	}
+	
 	//this displays what values the player got
 	public String getPlayerCard() {
 		return playerCard1 + " and  " + playerCard2;
@@ -143,6 +147,15 @@ public class BlackJackGame {
 	//isBust makes sure if the player exceeds 21 or not
 	public boolean isBust() {
 		if(playerTotal > 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean dealerBust() {
+		if(dealerTotal > 21) {
 			return true;
 		}
 		else {
@@ -174,6 +187,15 @@ public class BlackJackGame {
 	//this is to see if the player hit 21 or Blackjack
 	public boolean blackJackWin() {
 		if(playerTotal == 21) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	
+	public boolean draw() {
+		if(playerTotal == dealerTotal) {
 			return true;
 		}
 		else {
@@ -220,6 +242,7 @@ public class BlackJackGame {
 			System.out.println("Click new game to play again");
 		}
 		
+		//we print the total of the player and the dealer in the terminal
 		System.out.println("Your total is: " + playerTotal);
 		System.out.println("Dealers total: " + dealerTotal);
 	}
